@@ -6,7 +6,7 @@
 /*   By: hho-troc <hho-troc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 11:25:11 by hho-troc          #+#    #+#             */
-/*   Updated: 2025/09/03 12:05:53 by hho-troc         ###   ########.fr       */
+/*   Updated: 2025/09/04 11:14:20 by hho-troc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ private:
      * - Empty bodies are sufficient to satisfy the linker and the canonical form rule.
      */
     ScalarConverter();                                // default constructor
-    ScalarConverter(const ScalarConverter &other);    // copy constructor
-    ScalarConverter &operator=(const ScalarConverter &other); // copy assignment operator
+    ScalarConverter(const ScalarConverter &);    // copy constructor
+    ScalarConverter &operator=(const ScalarConverter &); // copy assignment operator
     ~ScalarConverter();                               // destructor
 };
 
-#endif // SCALARCONVERTER_HPP
+#endif 

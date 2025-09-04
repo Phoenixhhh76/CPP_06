@@ -6,7 +6,7 @@
 /*   By: hho-troc <hho-troc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 11:25:52 by hho-troc          #+#    #+#             */
-/*   Updated: 2025/09/03 12:32:10 by hho-troc         ###   ########.fr       */
+/*   Updated: 2025/09/04 11:40:35 by hho-troc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static bool isFloatLiteral(const std::string &s) {
 
     // Allow optional '+' or '-' at the beginning
     if (body[0] == '+' || body[0] == '-') i = 1;
-    if (i >= body.size()) return false;
+    if (i >= body.size()) return false; //here we can write == but >= is safer for defensive programming
 
     bool seenDigit = false;
     bool seenDot   = false;
@@ -96,7 +96,10 @@ static bool isFloatLiteral(const std::string &s) {
     // Scan each character in the body
     for (; i < body.size(); ++i) {
         char c = body[i];
-        if (std::isdigit(static_cast<unsigned char>(c))) {
+        if (std::isdigit(static_cast<unsigned char>(c)))
+        // std::isdigit takes int, but only values in the range of unsigned char or EOF are valid.
+        // Casting to unsigned char avoids undefined behavior when char is signed and has a negative value.
+        {
             seenDigit = true;          // At least one digit is required
         } else if (c == '.' && !seenDot) {
             seenDot = true;            // Allow only one dot
@@ -156,9 +159,9 @@ static void printChar(long v, bool possible) {
         std::cout << "impossible\n";
         return;
     }
-// std::isprint checks whether the character is displayable (letters, digits, punctuation, space).
-// It returns false for control characters like '\n', '\t', '\0', etc.
-// Casting to unsigned char is required: passing a signed char or int outside [0..255] is undefined behavior.
+    // std::isprint checks whether the character is displayable (letters, digits, punctuation, space).
+    // It returns false for control characters like '\n', '\t', '\0', etc.
+    // Casting to unsigned char is required: passing a signed char or int outside [0..255] is undefined behavior.
     unsigned char uc = static_cast<unsigned char>(v);
     if (!std::isprint(uc)) {
         std::cout << "Non displayable\n";
@@ -171,7 +174,11 @@ static void printChar(long v, bool possible) {
 static void printInt(double dv, bool possible) {
     std::cout << "int: ";
     if (!possible || std::isnan(dv) || std::isinf(dv) ||
-        dv < static_cast<double>(INT_MIN) || dv > static_cast<double>(INT_MAX)) {
+        dv < static_cast<double>(INT_MIN) || dv > static_cast<double>(INT_MAX))
+            // Compare using double to avoid overflow: dv is already a double
+            // - but casting INT_MIN/INT_MAX to double ensures both sides are the same type
+            // - we must check range before casting dv to int (otherwise UB)
+    {
         std::cout << "impossible\n";
         return;
     }
